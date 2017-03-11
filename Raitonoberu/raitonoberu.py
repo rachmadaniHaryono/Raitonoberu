@@ -107,6 +107,26 @@ class Raitonoberu(object):
 
         raise ValueError("Valid tag isn't recognizeable.\n{}".format("\n".join(valid_tag)))
 
+    @staticmethod
+    def _get_english_publisher(parse_info):
+        """get english_publisher from parse info.
+
+        :param parse_info: Parsed info from html soup.
+        """
+        english_publisher = parse_info.find('a', class_='genre', id='myepub')
+        if english_publisher is not None:
+            try:
+                english_publisher = english_publisher.children.string
+            except AttributeError:
+                # error raised because
+                # 'list_iterator'(english_publisher.children) object has no attribute 'string'
+                english_publisher = [x for x in english_publisher]
+                # not return a list if there is only one publisher
+                if len(english_publisher) == 1:
+                    english_publisher = english_publisher[0]
+
+        return english_publisher
+
     async def get_first_search_result(self, term: str):
         """Get first search result.
 
@@ -130,21 +150,13 @@ class Raitonoberu(object):
                 # English publisher,
                 # defined here so we can account for it if None,
                 # e.g. for works unlicensed in English
-                english_publisher = parse_info.find('a', class_='genre', id='myepub')
+                english_publisher = self._get_english_publisher(parse_info=parse_info)
                 # Publisher,
                 # defined here so we can account for it if it's None, e.g. not published
                 publisher = parse_info.find('a', class_='genre', id='myopub')
                 # Accounting for if Artists/English Publisher/Publisher is None
                 if artists is not None:
                     artists = artists.string
-                if english_publisher is not None:
-                    try:
-                        english_publisher = english_publisher.children.string
-                    except AttributeError:
-                        # english publisher's children tag is not string.
-                        english_publisher = list(english_publisher.children)
-                        if len(english_publisher) == 1:
-                            english_publisher = english_publisher[0]
                 if publisher is not None:
                     publisher = publisher.string
 
