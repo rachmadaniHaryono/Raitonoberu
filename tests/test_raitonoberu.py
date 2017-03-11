@@ -1,3 +1,6 @@
+"""test module."""
+import os
+import yaml
 from unittest import mock
 from itertools import product
 
@@ -55,56 +58,18 @@ async def test_get_search_page(term):
     assert res.startswith('http://www.novelupdates.com/series/')
 
 
+def get_search_page_method_paramaters():
+    """get data paramater for search page method."""
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    data_file = os.path.join(dir_path, 'test_data.yaml')
+    with open(data_file) as f:
+        parameter = yaml.load(f)
+    return parameter
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     'term, exp_res',
-    [
-        (
-            'smiling proud wanderer',
-            {
-                'aliases': [
-                    'Laughing in the Wind',
-                    'State of Divinity',
-                    'The Peerless Gallant Errant',
-                    'The Proud and Gallant Wanderer',
-                    'Xiao Ao Jiang Hu',
-                    '笑傲江湖'
-                ],
-                'artists': None,
-                'authors': ['Jin Yong'],
-                'completely_translated': True,
-                'cover': 'http://cdn.novelupdates.com/images/2017/02/IMG_2801.jpg',
-                'description': (
-                    'The Smiling, Proud Wanderer is a wuxia novel by Jin Yong (Louis Cha). '
-                    'It was first serialised in Hong Kong in the newspaper Ming Pao '
-                    'from 20 April 1967 to 12 October 1969. The Chinese title of the novel, '
-                    'Xiao Ao Jiang Hu, '
-                    'literally means to live a carefree life in a mundane world of strife. '
-                    'Alternate English translations of the title include '
-                    'Laughing in the Wind, '
-                    'The Peerless Gallant Errant, and The Proud and Gallant Wanderer. '
-                    'Another alternative title, State of Divinity, '
-                    'is used for some of the novel’s adaptations.'
-                ),
-                'english_publisher': None,
-                'genre': ['Action', 'Adventure', 'Martial Arts', 'Wuxia'],
-                'language': 'Chinese',
-                'licensed': False,
-                'link': 'http://www.novelupdates.com/series/smiling-proud-wanderer/',
-                'novel_status': '4 Volumes (Completed)\n40 Chapters (Completed)',
-                'publisher': 'Ming Pao',
-                'related_series': None,
-                'tags': [
-                    'Adapted To Drama', 'Adapted to Manhua', 'Adapted To Movie', 'Betrayal',
-                    'Misunderstandings', 'Politics', 'Revenge', 'Special Abilities'
-                ],
-                'title': 'Smiling Proud Wanderer',
-                'type': 'Chinese Novel',
-                'year': '1967'
-            }
-        )
-    ]
-
+    get_search_page_method_paramaters()
 )
 async def test_get_first_search_result(term, exp_res):
     from Raitonoberu.raitonoberu import Raitonoberu
