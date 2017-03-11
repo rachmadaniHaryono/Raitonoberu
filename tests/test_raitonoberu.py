@@ -154,13 +154,13 @@ async def test_related_series(term, exp_res):
 @pytest.mark.parametrize(
     'term, exp_res',
     [
-        ['Curing incurable diseases with semen', None],
-        ['S.A.O.', 'Yen Press'],
-        ['I shall seal the heavens', None],
+        ('Curing incurable diseases with semen', None),
+        ('I shall seal the heavens', 'Wuxiaworld'),
+        ('S.A.O.', 'Yen Press'),
     ]
 )
 async def test_english_publisher(term, exp_res):
-    """test related series category."""
+    """test english publisher."""
     from Raitonoberu.raitonoberu import Raitonoberu
     obj = Raitonoberu()
     # run
